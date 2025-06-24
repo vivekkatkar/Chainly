@@ -4,8 +4,37 @@ import { Appbar } from "@/components/Appbar"
 import { PrimaryButton } from "@/components/buttons/PrimaryButton"
 import CheckFeature from "@/components/CheckFeature"
 import { Input } from "@/components/Input"
+import axios from "axios"
+import { useState } from "react"
+import { BACKEND_URL } from "../config/config"
+import { useRouter } from "next/navigation"
 
 export default function Signup(){
+    const router = useRouter();
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    async function onSubmit(){
+       try{
+            const res = await axios.post(`${BACKEND_URL}/api/v1/user/signup`, {
+                "name": name,
+                "username": email,
+                "password": password
+            });
+
+            console.log(res);
+            if(res.status == 200){
+                router.push("/login");
+            }else{
+                alert("error :- ");
+            }
+       }catch(e : any){
+        alert(e.message);
+        console.log(e.message);
+       }
+    }
+
     return <div>
         <Appbar />
         <div className="flex justify-center">
@@ -26,21 +55,19 @@ export default function Signup(){
 
             <div className="flex-1 pt-6 pb-6 mt-12 px-4 border border-slate-400 rounded">
                 <Input label={"Name"} onChange={(e : any) => {
-                    console.log(e)
+                    setName(e.target.value);
                 }} type="text" placeholder="Your name"></Input>
 
                  <Input label={"Email"} onChange={(e : any) => {
-                    console.log(e)
+                    setEmail(e.target.value);
                 }} type="text" placeholder="Your email"></Input>
 
                  <Input label={"Password"} onChange={(e : any) => {
-                    console.log(e)
+                    setPassword(e.target.value);
                 }} type="password" placeholder="Your password"></Input>
 
                 <div className="pt-4">
-                    <PrimaryButton size="big" onClick={() => {
-
-                    }} >Get started free</PrimaryButton>
+                    <PrimaryButton size="big" onClick={onSubmit} >Get started free</PrimaryButton>
                 </div>
             </div>
         </div>
