@@ -21,6 +21,8 @@ router.post("/", authMiddleware, async (req, res) => {
         return;
     }
 
+    console.log(parsedData);
+
     const zapId = await prismaClient.$transaction(async (tx) => {
         const zap =  await prismaClient.zap.create({
             data : {
@@ -29,7 +31,8 @@ router.post("/", authMiddleware, async (req, res) => {
                 actions : {
                     create : parsedData.data.actions.map((x, index) => ({
                         actionId : x.availableactionId,
-                        sortingOrder : index
+                        sortingOrder : index,
+                        metadata : x.actionMetadata
                     }))
                 }
             }

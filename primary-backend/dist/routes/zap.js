@@ -28,6 +28,7 @@ router.post("/", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0,
         });
         return;
     }
+    console.log(parsedData);
     const zapId = yield db_1.prismaClient.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
         const zap = yield db_1.prismaClient.zap.create({
             data: {
@@ -36,7 +37,8 @@ router.post("/", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0,
                 actions: {
                     create: parsedData.data.actions.map((x, index) => ({
                         actionId: x.availableactionId,
-                        sortingOrder: index
+                        sortingOrder: index,
+                        metadata: x.actionMetadata
                     }))
                 }
             }
